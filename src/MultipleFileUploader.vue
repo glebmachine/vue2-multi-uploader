@@ -1,40 +1,43 @@
 <template>
     <div class="uploadBox">
-        <h3>Add files</h3>
         <form role="form" enctype="multipart/form-data" @submit.prevent="onSubmit">
             <div class="uploadBoxMain" v-if="!itemsAdded">
                 <div class="form-group">
                     <div class="dropArea" @ondragover="onChange">
-                        Drop multiple files here.
+                        <div class="drop-area__description" style="font-size: 18px; padding-bottom: 70px;"><span>Выберите фото</span> или перетащите сюда</div>
                         <input type="file" id="items" name="items[]" required multiple @change="onChange">
-                        <p class="help-block">Space for your instructions</p>
+                        <!-- <p class="help-block">Space for your instructions</p> -->
                     </div>
                 </div>
             </div>
             <div class="uploadBoxMain" v-else>
-                <p><strong>Names</strong></p>
-                <ol>
-                    <li v-for="name in itemsNames">{{name}}</li>
-                </ol>
+<!--                 <p><strong>Names</strong></p> -->
+                <!-- <ol> -->
+                <ul>
+                    <li style="list-style:none" v-for="name in itemsNames">{{name}}</li>
+                </ul>
+                <!-- </ol> -->
+<!--
                 <p><strong>Sizes</strong></p>
                 <ol>
                     <li v-for="size in itemsSizes">{{size}}</li>
                 </ol>
                 <p><strong>Total files:</strong> {{itemsAdded}}</p>
                 <p><strong>Total upload size:</strong> {{itemsTotalSize}}</p>
-                <button @click="removeItems">Remove files</button>
+-->
+                <button @click="removeItems" class="button remove-files component-report-new__submit">Удалить файл</button>
                 <!-- Loader -->
                 <div class="loader" v-if="isLoaderVisible">
                     <div class="loaderImg"></div>
                 </div>
                 <!-- End Loader -->
             </div>
+<!--
             <div>
-                <button type="submit" class="btn btn-primary btn-black btn-round" :disabled="itemsAdded < minItems || itemsAdded > maxItems">
-                    Upload</button>
+                <button type="submit" class="btn btn-primary btn-black btn-round" :disabled="itemsAdded < minItems || itemsAdded > maxItems">Upload</button>
                 <button type="button" class="btn btn-default btn-round" @click="removeItems">Cancel</button>
             </div>
-            <br>
+-->
             <div class="successMsg" v-if="successMsg !== ''">{{successMsg}}</div>
             <div class="errorMsg" v-if="errorMsg !== ''">An error has occurred:<br>{{errorMsg}}</div>
             <div class="errorMsg" v-if="itemsAdded && itemsAdded < minItems">Minimum {{minItems}} files need to be added to uploader. Please remove the files and try again.</div>
@@ -114,6 +117,8 @@ export default {
             let files = e.target.files || e.dataTransfer.files;
             this.itemsAdded = files.length;
             let fileSizes = 0;
+            console.log(files)
+            this.$store.state.loadFiles = files;
             for (let x in files) {
                 if (!isNaN(x)) {
                     this.items = e.target.files[x] || e.dataTransfer.files[x];
@@ -167,9 +172,13 @@ export default {
 <style>
 .uploadBox {
     position: relative;
-    background: #eee;
-    padding: 0 1em 1em 1em;
-    margin: 1em;
+    border: 3px dashed #7a7979;
+    min-height: 171px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .uploadBox h3 {
@@ -178,16 +187,12 @@ export default {
 
 .uploadBox .uploadBoxMain {
     position: relative;
-    margin-bottom: 1em;
-    margin-right: 1em;
 }
 
 /* Drag and drop */
 .uploadBox .dropArea {
     position: relative;
     width: 100%;
-    height: 300px;
-    border: 5px dashed #00ADCE;
     text-align: center;
     font-size: 2em;
     padding-top: 80px;
@@ -248,5 +253,13 @@ export default {
     font-size: 2em;
     color: #3c763d;
 }
-</style>
 
+.remove-files{
+    width: 190px;
+    height: 30px;
+    text-align: center;
+    justify-content: center;
+    margin: 12px auto 0;
+    padding: 0;
+}
+</style>
